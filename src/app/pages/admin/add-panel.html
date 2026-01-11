@@ -1,0 +1,79 @@
+<h1>Admin Panel</h1>
+
+<hr>
+<h2>Agregar Competidor</h2>
+<form (ngSubmit)="addCompetitor()">
+  <input placeholder="Nombre" [(ngModel)]="competitor.firstName" name="firstName" required />
+  <input placeholder="Apellido" [(ngModel)]="competitor.lastName" name="lastName" required />
+  <input type="number" placeholder="Edad" [(ngModel)]="competitor.age" name="age" required />
+  <input placeholder="Género (M/F)" [(ngModel)]="competitor.gender" name="gender" required />
+  <input type="number" placeholder="Peso" [(ngModel)]="competitor.weight" name="weight" required />
+  <input placeholder="Cinturón" [(ngModel)]="competitor.belt" name="belt" required />
+  <input placeholder="Club" [(ngModel)]="competitor.club" name="club" required />
+  <input placeholder="Coach ID" [(ngModel)]="competitor.coachId" name="coachId" />
+  <button type="submit">Agregar Competitor</button>
+</form>
+
+<hr>
+<h2>Agregar Coach</h2>
+<form (ngSubmit)="addCoach()">
+  <input placeholder="Nombre" [(ngModel)]="coach.name" name="coachName" required />
+  <input placeholder="Club" [(ngModel)]="coach.club" name="coachClub" required />
+  <button type="submit">Agregar Coach</button>
+</form>
+
+<hr>
+<h2>Agregar Category</h2>
+<form (ngSubmit)="addCategory()">
+  <input placeholder="Nombre" [(ngModel)]="category.name" name="catName" required />
+  <select [(ngModel)]="category.gender" name="catGender">
+    <option value="M">M</option>
+    <option value="F">F</option>
+    <option value="Mixed">Mixed</option>
+  </select>
+  <input type="number" placeholder="Edad mínima" [(ngModel)]="category.minAge" name="catMinAge" />
+  <input type="number" placeholder="Edad máxima" [(ngModel)]="category.maxAge" name="catMaxAge" />
+  <input type="number" placeholder="Peso mínimo" [(ngModel)]="category.minWeight" name="catMinWeight" />
+  <input type="number" placeholder="Peso máximo" [(ngModel)]="category.maxWeight" name="catMaxWeight" />
+  <input placeholder="Nivel cinturón" [(ngModel)]="category.beltLevel" name="catBeltLevel" />
+  <button type="submit">Agregar Category</button>
+</form>
+
+<hr>
+<h2>Agregar Podium</h2>
+<form (ngSubmit)="addPodium()">
+  <select [(ngModel)]="podium.categoryId" name="podiumCategory" required>
+    <option *ngFor="let cat of categories$ | async" [value]="cat.id">{{ cat.name }}</option>
+  </select>
+
+  <select [(ngModel)]="podium.first" name="podiumFirst" required>
+    <option *ngFor="let comp of competitors$ | async" [ngValue]="comp">{{ comp.firstName }} {{ comp.lastName }}</option>
+  </select>
+
+  <select [(ngModel)]="podium.second" name="podiumSecond">
+    <option *ngFor="let comp of competitors$ | async" [ngValue]="comp">{{ comp.firstName }} {{ comp.lastName }}</option>
+  </select>
+
+  <select [(ngModel)]="podium.third1" name="podiumThird1">
+    <option *ngFor="let comp of competitors$ | async" [ngValue]="comp">{{ comp.firstName }} {{ comp.lastName }}</option>
+  </select>
+
+  <select [(ngModel)]="podium.third2" name="podiumThird2">
+    <option *ngFor="let comp of competitors$ | async" [ngValue]="comp">{{ comp.firstName }} {{ comp.lastName }}</option>
+  </select>
+
+  <button type="submit">Agregar Podium</button>
+</form>
+
+<hr>
+<h2>Agregar Liguilla</h2>
+<form>
+  <div class="menu">
+  <button routerLink="/categories">Ligas</button>
+  <button routerLink="/coaches">Entrenadores</button>
+  <button routerLink="/competitors">Competidores</button>
+  <button routerLink="/tatamis">Tatamis</button>
+  <button routerLink="/league">Liguillas</button>
+
+</div>
+</form>

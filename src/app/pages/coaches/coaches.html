@@ -1,0 +1,16 @@
+<h1>Coaches</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Club</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let c of coaches$ | async">
+      <td>{{ c.name }}</td>
+      <td>{{ c.club }}</td>
+    </tr>
+  </tbody>
+</table>

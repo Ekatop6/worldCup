@@ -1,0 +1,37 @@
+<h1>Categories</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let c of categories$ | async"
+      (click)="selectCategory(c.id)"
+      style="cursor:pointer"
+    >
+      <td>{{ c.name }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="league$ | async as leagues">
+  <ng-container *ngIf="leagues.length > 0; else noLeague">
+
+    <h2>Bracket</h2>
+
+    <div *ngFor="let match of leagues[0].matches">
+      <div>
+        <strong>Round {{ match.round }}</strong>
+        <div>{{ match.competitorA }} vs {{ match.competitorB }}</div>
+      </div>
+    </div>
+
+  </ng-container>
+
+  <ng-template #noLeague>
+    <p>No hay liga creada para esta categoría</p>
+  </ng-template>
+</div>

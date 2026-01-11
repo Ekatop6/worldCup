@@ -1,0 +1,24 @@
+<h2>Crear liga</h2>
+
+<select [(ngModel)]="selectedCategoryId">
+  <option value="">-- Selecciona categoría --</option>
+  <option *ngFor="let c of categories$ | async" [value]="c.id">
+    {{ c.name }}
+  </option>
+</select>
+
+<h3>Selecciona competidores</h3>
+
+<div *ngFor="let c of competitors$ | async">
+  <label>
+    <input
+      type="checkbox"
+      (change)="toggleCompetitor(c.id, $event.target.checked)"
+    />
+    {{ c.firstName }} {{ c.lastName }}
+  </label>
+</div>
+
+<p>Seleccionados: {{ selectedCompetitorIds.length }}</p>
+
+<button (click)="createLeague()">Crear liga</button>

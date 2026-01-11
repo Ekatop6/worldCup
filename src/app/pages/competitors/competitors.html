@@ -1,0 +1,24 @@
+<h1>Competitors</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Weight</th>
+      <th>Belt</th>
+      <th>Club</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let c of competitors$ | async">
+      <td>{{ c.firstName }} {{ c.lastName }}</td>
+      <td>{{ c.gender }}</td>
+      <td>{{ c.age }}</td>
+      <td>{{ c.weight }} kg</td>
+      <td>{{ c.belt }}</td>
+      <td>{{ c.club }}</td>
+    </tr>
+  </tbody>
+</table>
