@@ -1,24 +1,77 @@
-<h1>Competitors</h1>
+<div class="container">
+  <h1>Competidores</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Gender</th>
-      <th>Age</th>
-      <th>Weight</th>
-      <th>Belt</th>
-      <th>Club</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let c of competitors$ | async">
-      <td>{{ c.firstName }} {{ c.lastName }}</td>
-      <td>{{ c.gender }}</td>
-      <td>{{ c.age }}</td>
-      <td>{{ c.weight }} kg</td>
-      <td>{{ c.belt }}</td>
-      <td>{{ c.club }}</td>
-    </tr>
-  </tbody>
-</table>
+  <div class="toolbar">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="onSearch()" 
+        placeholder="Buscar por nombre o club...">
+    </div>
+
+    <div class="order-box">
+      <label>Ordenar por:</label>
+      <select [(ngModel)]="orderType" (change)="onOrderChange()">
+        <option value="number">Dorsal</option>
+        <option value="club">Club</option>
+      </select>
+    </div>
+  </div>
+
+  <table class="competitors-table">
+    <thead>
+      <tr>
+        <th>Dorsal</th>
+        <th>Nombre y Apellidos</th>
+        <th>Cinturón</th>
+        <th>Club</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let c of filteredCompetitors$ | async">
+        <tr (click)="toggleDetails(c.id)" [class.active]="selectedCompetitorId === c.id">
+          <td class="dorsal-cell">{{ c.dorsal || '-' }}</td>
+          <td>{{ c.firstName }} {{ c.lastName }}</td>
+          <td><span class="belt-badge" [attr.data-belt]="c.belt">{{ c.belt }}</span></td>
+          <td>{{ c.club }}</td>
+        </tr>
+
+       <tr *ngIf="selectedCompetitorId === c.id" class="details-row">
+  <td colspan="4">
+    <div class="details-content">
+      <div class="details-grid" [class.full-width]="!(isAdmin$ | async)">
+        
+        <div class="categories-section">
+          <h4>Categorías inscritas:</h4>
+          <ul>
+            <li *ngFor="let name of c.categoryNames">{{ name }}</li>
+            <li *ngIf="!c.categoryNames?.length" class="no-data">Sin categorías</li>
+          </ul>
+        </div>
+
+        <div class="edit-section" *ngIf="isAdmin$ | async">
+          <h4>Edición Rápida (Solo admin)</h4>
+          <div class="edit-form">
+            <div class="form-group">
+              <label>Dorsal:</label>
+              <input type="number" [(ngModel)]="c.dorsal">
+            </div>
+            <div class="form-group">
+              <label>Club:</label>
+              <input type="text" [(ngModel)]="c.club">
+            </div>
+            <button class="btn-save" (click)="updateCompetitor(c)">
+              Guardar Cambios
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </td>
+</tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>

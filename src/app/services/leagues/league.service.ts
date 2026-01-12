@@ -3,7 +3,7 @@ import { FirebaseService } from '../firebase.service';
 import { CompetitorService } from '../competitors/competitors.service'; // Importante
 import { League } from '../../models/league.model';
 import { Match } from '../../models/match.model';
-import { Competitor } from '../../models/competitor.model';
+import { CategoryService } from '../categories/category.service';
 import { v4 as uuid } from 'uuid';
 import { map, Observable, combineLatest } from 'rxjs';
 import { firstValueFrom } from 'rxjs';
@@ -11,7 +11,8 @@ import { firstValueFrom } from 'rxjs';
 export class LeagueService {
   constructor(
     private firebase: FirebaseService,
-    private competitorService: CompetitorService
+    private competitorService: CompetitorService,
+    private categoryService: CategoryService
   ) {}
 
   // Obtiene las ligas y sustituye los IDs por objetos Competitor completos
@@ -38,7 +39,31 @@ export class LeagueService {
       })
     );
   }
-
+ getLeagues(): Observable<League[]> {
+  return combineLatest([
+    this.firebase.getCollection<League>('leagues'),
+    this.categoryService.getCategories(),
+    this.competitorService.getCompetitors()
+  ]).pipe(
+    map(([leagues, categories, allCompetitors]) => {
+      return leagues.map(league => {
+        // Buscamos el objeto categoría para sacar el nombre
+        const category = categories.find(c => c.id === league.categoryId);
+        
+        return {
+          ...league,
+          categoryName: category ? category.name : 'Sin Categoría', // Aquí se crea la propiedad
+          matches: league.matches?.map(match => ({
+            ...match,
+            competitorA: allCompetitors.find(c => c.id === (match.competitorA as any)),
+            competitorB: allCompetitors.find(c => c.id === (match.competitorB as any)),
+            winner: allCompetitors.find(c => c.id === (match.winner as any))
+          }))
+        };
+      });
+    })
+  );
+}
   createLeague(categoryId: string, competitorIds: string[]) {
     const size = competitorIds.length;
     if (![2, 4, 8, 16, 32].includes(size)) {

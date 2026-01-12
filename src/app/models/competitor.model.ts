@@ -3,10 +3,13 @@ export interface Competitor {
   dorsal: number;
   firstName: string;
   lastName: string;
-  gender: string;
+  gender: 'M' | 'F';
   age: number;
   weight: number;
   belt: string;
   club: string;
+  compite: 'Kata' | 'Kumite' | 'Both';
   coachId?: string;
+  categoryIds?: string[];
+  categoryNames?: string[];
 }

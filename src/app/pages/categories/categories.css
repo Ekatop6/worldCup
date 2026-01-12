@@ -1,71 +1,92 @@
-.bracket-wrapper {
-  overflow-x: auto;
-  padding: 20px;
-  background-color: #f8f9fa;
-}
-
-.bracket-container {
-  display: flex;
-  gap: 40px;
-  align-items: flex-start;
-}
-
-.round {
-  display: flex;
-  flex-direction: column;
-  min-width: 200px;
-}
-
-.round h3 {
-  text-align: center;
-  color: #333;
-  font-size: 1.1rem;
-}
-
-.matches-list {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  flex-grow: 1;
-  gap: 20px;
-}
-
-.match-card {
-  background: white;
-  border: 1px solid #ddd;
+.age-header {
+  background: #1a1a1a;
+  color: white;
+  padding: 10px 15px;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  overflow: hidden;
+  margin: 20px 0 10px 0;
 }
 
-.competitor-row {
-  padding: 10px;
+.league-row {
   display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-  background: #fff;
+  align-items: center;
+  padding: 12px;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  margin-bottom: 2px;
 }
 
-.competitor-row.winner {
-  background-color: #d4edda;
-  font-weight: bold;
+.league-row:hover { background: #eee; }
+.league-row.active { background: #fff; border-bottom: none; }
+
+.badge {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  background: #dc3545; /* Rojo Kumite */
+  color: white;
+  border-radius: 3px;
+  margin-right: 15px;
 }
 
-.separator {
-  height: 1px;
-  background: #eee;
+.badge.kata { background: #ffc107; color: #000; } /* Amarillo Kata */
+
+.bracket-expansion {
+  border: 1px solid #ddd;
+  border-top: none;
+  background: #fafafa;
+  padding: 20px;
+  margin-bottom: 10px;
 }
 
-.score {
-  font-weight: bold;
-  color: #666;
+.bracket-scroll { overflow-x: auto; }
+.bracket-view { display: flex; gap: 30px; }
+
+.round-col { min-width: 150px; display: flex; flex-direction: column; }
+.round-label { font-weight: bold; text-align: center; font-size: 0.8rem; color: #666; }
+
+.matches-container { display: flex; flex-direction: column; justify-content: space-around; flex-grow: 1; gap: 15px; }
+
+.match-box {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-.matches-list {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around; /* Esto distribuye los combates proporcionalmente */
-  height: 100%; /* Importante para que el espacio se reparta */
-  min-height: 400px; /* Ajusta según necesites */
-  gap: 10px;
+.match-participant { padding: 5px 10px; font-size: 0.9rem; }
+.aka { border-bottom: 1px solid #eee; border-left: 4px solid #dc3545; }
+.ao { border-left: 4px solid #007bff; }
+
+.age-section { margin-bottom: 2rem; }
+.age-title { border-bottom: 3px solid #333; padding-bottom: 5px; margin-bottom: 1rem; }
+
+.league-header {
+  background: #f4f4f4; padding: 15px; display: flex; justify-content: space-between;
+  cursor: pointer; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 5px;
 }
+.league-header.active { background: #e9ecef; border-bottom: none; border-radius: 4px 4px 0 0; }
+
+.modality-tag {
+  font-size: 0.7rem; padding: 2px 6px; border-radius: 3px; 
+  background: #dc3545; color: white; margin-right: 10px; font-weight: bold;
+}
+.modality-tag.kata { background: #ffc107; color: black; }
+
+.bracket-expansion {
+  border: 1px solid #ddd; background: #fff; padding: 20px;
+  overflow-x: auto; margin-bottom: 10px; border-radius: 0 0 4px 4px;
+}
+
+/* Diseño del Árbol */
+.bracket-wrapper { display: flex; gap: 40px; min-width: max-content; }
+.round-column { display: flex; flex-direction: column; width: 200px; }
+.round-header { text-align: center; color: #666; font-size: 0.8rem; text-transform: uppercase; }
+.matches-container { display: flex; flex-direction: column; justify-content: space-around; flex-grow: 1; }
+
+.match-card { border: 1px solid #ccc; border-radius: 4px; margin: 10px 0; overflow: hidden; }
+.competitor { padding: 8px; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
+.competitor:hover { background: #f0f0f0; }
+.competitor.aka { border-left: 4px solid #dc3545; }
+.competitor.ao { border-left: 4px solid #007bff; }
+.competitor.winner { background: #d4edda; font-weight: bold; }
+
+.vs-divider { font-size: 0.6rem; text-align: center; background: #eee; color: #999; }

@@ -3,13 +3,22 @@
 <hr>
 <h2>Agregar Competidor</h2>
 <form (ngSubmit)="addCompetitor()">
+  <input placeholder="Dorsal" [(ngModel)]="competitor.dorsal" name="dorsal" required />
   <input placeholder="Nombre" [(ngModel)]="competitor.firstName" name="firstName" required />
   <input placeholder="Apellido" [(ngModel)]="competitor.lastName" name="lastName" required />
   <input type="number" placeholder="Edad" [(ngModel)]="competitor.age" name="age" required />
-  <input placeholder="Género (M/F)" [(ngModel)]="competitor.gender" name="gender" required />
+  <select [(ngModel)]="competitor.gender" name="gender">
+    <option value="M">M</option>
+    <option value="F">F</option>
+  </select>
   <input type="number" placeholder="Peso" [(ngModel)]="competitor.weight" name="weight" required />
   <input placeholder="Cinturón" [(ngModel)]="competitor.belt" name="belt" required />
   <input placeholder="Club" [(ngModel)]="competitor.club" name="club" required />
+  <select [(ngModel)]="competitor.compite" name="compite" required>
+    <option value="Kata">Kata</option>
+    <option value="Kumite">Kumite</option>
+    <option value="Both">Both</option>
+  </select>
   <input placeholder="Coach ID" [(ngModel)]="competitor.coachId" name="coachId" />
   <button type="submit">Agregar Competitor</button>
 </form>
@@ -30,6 +39,10 @@
     <option value="M">M</option>
     <option value="F">F</option>
     <option value="Mixed">Mixed</option>
+  </select>
+  <select [(ngModel)]="category.estilo" name="catEstilo">
+    <option value="Kata">Kata</option>
+    <option value="Kumite">Kumite</option>
   </select>
   <input type="number" placeholder="Edad mínima" [(ngModel)]="category.minAge" name="catMinAge" />
   <input type="number" placeholder="Edad máxima" [(ngModel)]="category.maxAge" name="catMaxAge" />

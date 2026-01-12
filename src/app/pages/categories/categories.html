@@ -1,75 +1,53 @@
-<h1>Campeonato de Karate - Cuadrante</h1>
+<div class="tournament-container">
+  <h1>Cuadros de Competición</h1>
 
-<table class="category-table">
-  <thead>
-    <tr>
-      <th>Selecciona una Categoría</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr
-      *ngFor="let c of categories$ | async"
-      (click)="selectCategory(c.id)"
-      [class.selected]="selectedCategoryId === c.id"
-      style="cursor:pointer"
-    >
-      <td>{{ c.name }}</td>
-    </tr>
-  </tbody>
-</table>
+  <div *ngFor="let ageGroup of groupedLeagues$ | async | keyvalue" class="age-section">
+    <h2 class="age-title">{{ ageGroup.key }}</h2>
 
-<hr />
-
-<div *ngIf="leagues$ | async as leagues" class="bracket-wrapper">
-  <ng-container *ngIf="leagues.length > 0; else noLeague">
-    
-    <div class="bracket-container">
-      <div *ngFor="let round of getRounds(leagues[0]?.matches ?? [])" class="round">
-        <h3 class="round-title">Ronda {{ round }}</h3>
+    <div class="leagues-list">
+      <div *ngFor="let league of ageGroup.value" class="league-item">
         
-        <div class="matches-list">
-          <div *ngFor="let match of getMatchesByRound(leagues[0]?.matches ?? [], round)" class="match-card">
-            
-            <div class="match-info">#{{ match.order + 1 }}</div>
+        <div class="league-header" 
+             (click)="toggleLeague(league.id)" 
+             [class.active]="expandedLeagueId === league.id">
+          <span class="category-info">
+            <span class="modality-tag" [class.kata]="league.categoryName.includes('KATA')">
+              {{ league.categoryName.includes('KATA') ? 'K' : 'KUM' }}
+            </span>
+            {{ league.categoryName }}
+          </span>
+          <span class="chevron">{{ expandedLeagueId === league.id ? '▲' : '▼' }}</span>
+        </div>
 
-            <div 
-              class="competitor-row" 
-              [class.winner]="match.winner?.id === match.competitorA?.id"
-              [class.clickable]="match.competitorA"
-              (click)="setWinner(leagues[0]?.id, match.id, match.competitorA)"
-            >
-              <span class="name">
-                {{ match.competitorA?.firstName ?? 'Esperando...' }} 
-                {{ match.competitorA?.lastName ?? '' }}
-              </span>
-              <span class="status-icon" *ngIf="match.winner?.id === match.competitorA?.id">🏆</span>
+        <div class="bracket-expansion" *ngIf="expandedLeagueId === league.id">
+          <div class="bracket-wrapper">
+            <div *ngFor="let round of getRounds(league.matches)" class="round-column">
+              <h4 class="round-header">Ronda {{ round + 1 }}</h4>
+              
+              <div class="matches-container">
+                <div *ngFor="let match of getMatchesByRound(league.matches, round)" class="match-card">
+                  
+                  <div class="competitor aka" 
+                       [class.winner]="match.winner === match.competitorA?.id"
+                       (click)="setWinner(league.id, match.id, match.competitorA)">
+                    <span class="name">{{ match.competitorA?.lastName || '---' }}</span>
+                  </div>
+
+                  <div class="vs-divider">VS</div>
+
+                  <div class="competitor ao" 
+                       [class.winner]="match.winner === match.competitorB?.id"
+                       (click)="setWinner(league.id, match.id, match.competitorB)">
+                    <span class="name">{{ match.competitorB?.lastName || '---' }}</span>
+                  </div>
+
+                </div>
+              </div>
             </div>
-
-            <div class="separator">VS</div>
-
-            <div 
-              class="competitor-row" 
-              [class.winner]="match.winner?.id === match.competitorB?.id"
-              [class.clickable]="match.competitorB"
-              (click)="setWinner(leagues[0]?.id, match.id, match.competitorB)"
-            >
-              <span class="name">
-                {{ match.competitorB?.firstName ?? 'Esperando...' }} 
-                {{ match.competitorB?.lastName ?? '' }}
-              </span>
-              <span class="status-icon" *ngIf="match.winner?.id === match.competitorB?.id">🏆</span>
-            </div>
-
           </div>
         </div>
+
       </div>
     </div>
-
-  </ng-container>
-
-  <ng-template #noLeague>
-    <div class="empty-state">
-      <p>No hay ninguna liga creada para esta categoría.</p>
-    </div>
-  </ng-template>
+  </div>
 </div>

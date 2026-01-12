@@ -1,11 +1,12 @@
 // src/app/services/firebase.service.ts
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { collection, onSnapshot, addDoc, DocumentData, QuerySnapshot, doc, updateDoc, Firestore,getFirestore } from 'firebase/firestore';
+import { arrayUnion, collection, onSnapshot, addDoc, DocumentData, QuerySnapshot, doc, updateDoc, Firestore,getFirestore } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import { db } from '../firebase/firebase';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.prod';
+import { Category } from '../models/category.model';
 
 @Injectable({ providedIn: 'root' })
 export class FirebaseService {
@@ -46,5 +47,18 @@ export class FirebaseService {
       console.error("Error actualizando documento: ", error);
       throw error;
     }
+  }
+
+  async updateCategoriesWithCompetitor(categories: Category[], competitorId: string) {
+    const db = getFirestore();
+
+    const updatePromises = categories.map(cat => {
+      const categoryRef = doc(db, 'Categories', cat.id);
+      return updateDoc(categoryRef, {
+        competitorIds: arrayUnion(competitorId)
+      });
+    });
+
+    return Promise.all(updatePromises);
   }
 }
