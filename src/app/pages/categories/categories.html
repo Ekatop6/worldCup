@@ -1,15 +1,16 @@
-<h1>Categories</h1>
+<h1>Campeonato de Karate - Cuadrante</h1>
 
-<table>
+<table class="category-table">
   <thead>
     <tr>
-      <th>Name</th>
+      <th>Selecciona una Categoría</th>
     </tr>
   </thead>
   <tbody>
     <tr
       *ngFor="let c of categories$ | async"
       (click)="selectCategory(c.id)"
+      [class.selected]="selectedCategoryId === c.id"
       style="cursor:pointer"
     >
       <td>{{ c.name }}</td>
@@ -17,21 +18,58 @@
   </tbody>
 </table>
 
-<div *ngIf="league$ | async as leagues">
+<hr />
+
+<div *ngIf="leagues$ | async as leagues" class="bracket-wrapper">
   <ng-container *ngIf="leagues.length > 0; else noLeague">
+    
+    <div class="bracket-container">
+      <div *ngFor="let round of getRounds(leagues[0]?.matches ?? [])" class="round">
+        <h3 class="round-title">Ronda {{ round }}</h3>
+        
+        <div class="matches-list">
+          <div *ngFor="let match of getMatchesByRound(leagues[0]?.matches ?? [], round)" class="match-card">
+            
+            <div class="match-info">#{{ match.order + 1 }}</div>
 
-    <h2>Bracket</h2>
+            <div 
+              class="competitor-row" 
+              [class.winner]="match.winner?.id === match.competitorA?.id"
+              [class.clickable]="match.competitorA"
+              (click)="setWinner(leagues[0]?.id, match.id, match.competitorA)"
+            >
+              <span class="name">
+                {{ match.competitorA?.firstName ?? 'Esperando...' }} 
+                {{ match.competitorA?.lastName ?? '' }}
+              </span>
+              <span class="status-icon" *ngIf="match.winner?.id === match.competitorA?.id">🏆</span>
+            </div>
 
-    <div *ngFor="let match of leagues[0].matches">
-      <div>
-        <strong>Round {{ match.round }}</strong>
-        <div>{{ match.competitorA }} vs {{ match.competitorB }}</div>
+            <div class="separator">VS</div>
+
+            <div 
+              class="competitor-row" 
+              [class.winner]="match.winner?.id === match.competitorB?.id"
+              [class.clickable]="match.competitorB"
+              (click)="setWinner(leagues[0]?.id, match.id, match.competitorB)"
+            >
+              <span class="name">
+                {{ match.competitorB?.firstName ?? 'Esperando...' }} 
+                {{ match.competitorB?.lastName ?? '' }}
+              </span>
+              <span class="status-icon" *ngIf="match.winner?.id === match.competitorB?.id">🏆</span>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
 
   </ng-container>
 
   <ng-template #noLeague>
-    <p>No hay liga creada para esta categoría</p>
+    <div class="empty-state">
+      <p>No hay ninguna liga creada para esta categoría.</p>
+    </div>
   </ng-template>
 </div>

@@ -1,9 +1,11 @@
+import { Competitor } from "./competitor.model";
+
 export interface Match {
   id: string;
   round: number;
   order: number;
-  competitorA?: string;
-  competitorB?: string;
-  winner?: string;
+  competitorA?: Competitor;
+  competitorB?: Competitor;
+  winner?: Competitor;
   nextMatchId?: string;
 }

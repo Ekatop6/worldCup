@@ -1,5 +1,6 @@
 export interface Competitor {
   id: string;
+  dorsal: number;
   firstName: string;
   lastName: string;
   gender: string;

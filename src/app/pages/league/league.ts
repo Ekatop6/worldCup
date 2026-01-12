@@ -11,6 +11,7 @@ import { CompetitorService } from '../../services/competitors/competitors.servic
 import { League } from '../../models/league.model';
 import { Category } from '../../models/category.model';
 import { Competitor } from '../../models/competitor.model';
+import { Match } from '../../models/match.model';
 
 @Component({
   selector: 'app-league',
@@ -23,7 +24,6 @@ export class LeagueComponent {
 
   categories$: Observable<Category[]>;
   competitors$: Observable<Competitor[]>;
-  leagues$: Observable<League[]>;
 
   selectedCategoryId: string = '';
   selectedCompetitorIds: string[] = [];
@@ -35,7 +35,6 @@ export class LeagueComponent {
   ) {
     this.categories$ = this.categoryService.getCategories();
     this.competitors$ = this.competitorService.getCompetitors();
-    this.leagues$ = this.leagueService.getLeagues();
   }
 
   createLeague() {
@@ -63,4 +62,6 @@ export class LeagueComponent {
         this.selectedCompetitorIds.filter(c => c !== id);
     }
   }
+
+
 }

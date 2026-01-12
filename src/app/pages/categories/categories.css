@@ -1,0 +1,71 @@
+.bracket-wrapper {
+  overflow-x: auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+
+.bracket-container {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.round {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+}
+
+.round h3 {
+  text-align: center;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.matches-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex-grow: 1;
+  gap: 20px;
+}
+
+.match-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.competitor-row {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  background: #fff;
+}
+
+.competitor-row.winner {
+  background-color: #d4edda;
+  font-weight: bold;
+}
+
+.separator {
+  height: 1px;
+  background: #eee;
+}
+
+.score {
+  font-weight: bold;
+  color: #666;
+}
+
+.matches-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around; /* Esto distribuye los combates proporcionalmente */
+  height: 100%; /* Importante para que el espacio se reparta */
+  min-height: 400px; /* Ajusta según necesites */
+  gap: 10px;
+}
