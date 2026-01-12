@@ -8,4 +8,10 @@ export interface Match {
   competitorB?: Competitor;
   winner?: Competitor;
   nextMatchId?: string;
+  score1?: number;
+  score2?: number;
+  score3?: number;
+  score4?: number;
+  score5?: number;
+  totalScore?: number;
 }

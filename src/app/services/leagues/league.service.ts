@@ -47,12 +47,11 @@ export class LeagueService {
   ]).pipe(
     map(([leagues, categories, allCompetitors]) => {
       return leagues.map(league => {
-        // Buscamos el objeto categoría para sacar el nombre
         const category = categories.find(c => c.id === league.categoryId);
-        
         return {
           ...league,
-          categoryName: category ? category.name : 'Sin Categoría', // Aquí se crea la propiedad
+          categoryName: category ? category.name : 'Desconocida',
+          estilo: category ? category.estilo : 'Kumite', // <--- Añadimos esto
           matches: league.matches?.map(match => ({
             ...match,
             competitorA: allCompetitors.find(c => c.id === (match.competitorA as any)),
@@ -147,6 +146,39 @@ export class LeagueService {
 
     // 5. Guardamos toda la liga actualizada en Firebase
     // Nota: Asegúrate de que tu firebase.service tenga un método update o set
+    return this.firebase.update('leagues', leagueId, league);
+  }
+
+  async updateKataMatchScore(leagueId: string, matchId: string, data: any) {
+    // 1. Obtenemos todas las ligas para encontrar la que queremos actualizar
+    const leagues = await firstValueFrom(this.firebase.getCollection<League>('leagues'));
+    const league = leagues.find(l => l.id === leagueId);
+
+    if (!league || !league.matches) {
+      throw new Error('La liga o sus combates no existen');
+    }
+
+    // 2. Buscamos el índice del competidor (match) específico dentro de la liga
+    const matchIndex = league.matches.findIndex(m => m.id === matchId);
+    
+    if (matchIndex === -1) {
+      throw new Error('El competidor no existe en esta liga');
+    }
+
+    // 3. Actualizamos el match con las nuevas notas y el total
+    // Mantenemos los datos anteriores (...league.matches[matchIndex]) y sobreescribimos los puntos
+    league.matches[matchIndex] = {
+      ...league.matches[matchIndex],
+      score1: data.score1,
+      score2: data.score2,
+      score3: data.score3,
+      score4: data.score4,
+      score5: data.score5,
+      totalScore: data.totalScore
+    };
+
+    // 4. Guardamos el objeto 'league' completo de nuevo en Firestore
+    // Esto sobreescribe el array 'matches' con los nuevos valores
     return this.firebase.update('leagues', leagueId, league);
   }
 

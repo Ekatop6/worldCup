@@ -7,12 +7,10 @@
     <div class="leagues-list">
       <div *ngFor="let league of ageGroup.value" class="league-item">
         
-        <div class="league-header" 
-             (click)="toggleLeague(league.id)" 
-             [class.active]="expandedLeagueId === league.id">
+        <div class="league-header" (click)="toggleLeague(league.id)">
           <span class="category-info">
-            <span class="modality-tag" [class.kata]="league.categoryName.includes('KATA')">
-              {{ league.categoryName.includes('KATA') ? 'K' : 'KUM' }}
+            <span class="modality-tag" [class.kata]="league.estilo === 'Kata'">
+              {{ league.estilo }}
             </span>
             {{ league.categoryName }}
           </span>
@@ -20,34 +18,56 @@
         </div>
 
         <div class="bracket-expansion" *ngIf="expandedLeagueId === league.id">
-          <div class="bracket-wrapper">
-            <div *ngFor="let round of getRounds(league.matches)" class="round-column">
-              <h4 class="round-header">Ronda {{ round + 1 }}</h4>
-              
-              <div class="matches-container">
-                <div *ngFor="let match of getMatchesByRound(league.matches, round)" class="match-card">
-                  
-                  <div class="competitor aka" 
-                       [class.winner]="match.winner === match.competitorA?.id"
-                       (click)="setWinner(league.id, match.id, match.competitorA)">
-                    <span class="name">{{ match.competitorA?.lastName || '---' }}</span>
-                  </div>
-
-                  <div class="vs-divider">VS</div>
-
-                  <div class="competitor ao" 
-                       [class.winner]="match.winner === match.competitorB?.id"
-                       (click)="setWinner(league.id, match.id, match.competitorB)">
-                    <span class="name">{{ match.competitorB?.lastName || '---' }}</span>
-                  </div>
-
-                </div>
-              </div>
-            </div>
+          
+          <div *ngIf="league.estilo === 'Kata'" class="kata-results-container">
+            <table class="kata-table">
+              <thead>
+                <tr>
+                  <th>Salida</th>
+                  <th>Dorsal</th>
+                  <th>Competidor</th>
+                  <th>Club</th>
+                  <th>J1</th><th>J2</th><th>J3</th><th>J4</th><th>J5</th>
+                  <th class="total-th">TOTAL</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let match of getMatchesByRound(league.matches, 1); let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ match.competitorA?.dorsal }}</td>
+                  <td>{{ match.competitorA?.firstName }} {{ match.competitorA?.lastName }}</td>
+                  <td>{{ match.competitorA?.club }}</td>
+                  <td><input type="number" [(ngModel)]="match.score1" class="score-input"></td>
+                  <td><input type="number" [(ngModel)]="match.score2" class="score-input"></td>
+                  <td><input type="number" [(ngModel)]="match.score3" class="score-input"></td>
+                  <td><input type="number" [(ngModel)]="match.score4" class="score-input"></td>
+                  <td><input type="number" [(ngModel)]="match.score5" class="score-input"></td>
+                  <td class="total-score">{{ calculateTotal(match) }}</td>
+                  <td><button class="btn-save" (click)="saveKataScore(league.id, match)">Guardar</button></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </div>
 
-      </div>
+          <div *ngIf="league.estilo === 'Kumite'" class="bracket-wrapper">
+             <div *ngFor="let round of getRounds(league.matches)" class="round-column">
+                <h4 class="round-header">Ronda {{ round }}</h4>
+                <div class="matches-container">
+                  <div *ngFor="let m of getMatchesByRound(league.matches, round)" class="match-card">
+                    <div class="competitor aka" (click)="setWinner(league.id, m.id, m.competitorA)" [class.winner]="m.winner === m.competitorA?.id">
+                      {{ m.competitorA?.lastName || '---' }}
+                    </div>
+                    <div class="vs-divider">VS</div>
+                    <div class="competitor ao" (click)="setWinner(league.id, m.id, m.competitorB)" [class.winner]="m.winner === m.competitorB?.id">
+                      {{ m.competitorB?.lastName || '---' }}
+                    </div>
+                  </div>
+                </div>
+             </div>
+          </div>
+
+        </div> </div>
     </div>
   </div>
 </div>

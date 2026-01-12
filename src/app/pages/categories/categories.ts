@@ -6,11 +6,11 @@ import { League } from '../../models/league.model';
 import { Observable, map } from 'rxjs';
 import { Match } from '../../models/match.model';
 import { Competitor } from '../../models/competitor.model';
-
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './categories.html',
   styleUrls: ['./categories.css']
 })
@@ -85,6 +85,37 @@ export class CategoriesComponent {
       } catch (error) {
         console.error(error);
       }
+    }
+  }
+
+  // Calcula el total (puedes ajustar si quieres quitar la nota más alta y baja, común en Kata)
+calculateTotal(match: any): number {
+  const scores = [
+    match.score1 || 0,
+    match.score2 || 0,
+    match.score3 || 0,
+    match.score4 || 0,
+    match.score5 || 0
+  ];
+  return parseFloat(scores.reduce((a, b) => a + b, 0).toFixed(2));
+}
+
+async saveKataScore(leagueId: string, match: any) {
+    try {
+      const total = this.calculateTotal(match);
+      // Llamamos al servicio para actualizar el match con las nuevas notas
+      await this.leagueService.updateKataMatchScore(leagueId, match.id, {
+        score1: match.score1,
+        score2: match.score2,
+        score3: match.score3,
+        score4: match.score4,
+        score5: match.score5,
+        totalScore: total
+      });
+      alert('Puntuación guardada correctamente');
+    } catch (error) {
+      console.error(error);
+      alert('Error al guardar');
     }
   }
 }

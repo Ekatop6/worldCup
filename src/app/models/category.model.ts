@@ -1,3 +1,5 @@
+import { Tatami } from "./tatami.model";
+
 export interface Category {
   id: string;
   name: string;
@@ -10,4 +12,5 @@ export interface Category {
   beltLevel?: string;
   competitorIds?: string[];
   competitorNames?: string[];
+  tatamiNumber?: Tatami;
 }
