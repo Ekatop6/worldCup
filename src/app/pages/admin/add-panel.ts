@@ -13,6 +13,7 @@ import { Podium } from '../../models/podium.model';
 import { Observable } from 'rxjs';
 import { LeagueService } from '../../services/leagues/league.service';
 import { RouterLink } from '@angular/router';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-admin-panel',
   standalone: true,
@@ -41,9 +42,7 @@ export class AdminPanelComponent {
   }
 
   addCompetitor() {
-    this.competitorService.addCompetitor(this.competitor as Competitor)
-      .then(() => alert('Competitor agregado!'))
-      .catch(err => console.error(err));
+    this.onSave();
   }
 
   addCoach() {
@@ -52,29 +51,42 @@ export class AdminPanelComponent {
       .catch(err => console.error(err));
   }
 
-  addCategory() {
-    this.categoryService.addCategory(this.category as Category)
-      .then(() => alert('Category agregada!'))
-      .catch(err => console.error(err));
+  async addCategory() {
+    const result = await this.categoryService.addCategory(this.category as Category);
+    if (result) {
+      this.resetCategoryForm();
+    }
+  }
+
+  resetCategoryForm() {
+    this.category = {
+      name: '',
+      gender: 'M',
+      estilo: 'Kata',
+      minAge: undefined,
+      maxAge: undefined,
+      minWeight: undefined,
+      maxWeight: undefined
+    };
   }
 
   async addPodium() {
-  const first = await this.competitorService.getById(this.podium.first?.id || '');
-  const second = await this.competitorService.getById(this.podium.second?.id || '');
-  const third1 = await this.competitorService.getById(this.podium.third1?.id || '');
-  const third2 = await this.competitorService.getById(this.podium.third2?.id || '');
+    const first = await this.competitorService.getById(this.podium.first?.id || '');
+    const second = await this.competitorService.getById(this.podium.second?.id || '');
+    const third1 = await this.competitorService.getById(this.podium.third1?.id || '');
+    const third2 = await this.competitorService.getById(this.podium.third2?.id || '');
 
-  if (!first) return alert('Selecciona al menos el primer lugar');
+    if (!first) return alert('Selecciona al menos el primer lugar');
 
-  await this.podiumService.addPodium({
-    categoryId: this.podium.categoryId!,
-    first,
-    second: second || undefined,
-    third1: third1 || undefined,
-    third2: third2 || undefined
-  });
-  alert('Podium agregado!');
-}
+    await this.podiumService.addPodium({
+      categoryId: this.podium.categoryId!,
+      first,
+      second: second || undefined,
+      third1: third1 || undefined,
+      third2: third2 || undefined
+    });
+    alert('Podium agregado!');
+  }
 
   createLeague() {
     if (!this.selectedCategoryId) {
@@ -89,10 +101,58 @@ export class AdminPanelComponent {
       this.selectedCategoryId,
       this.selectedCompetitorIds
     )
-    .then(() => alert('Liga creada correctamente'))
-    .catch(err => console.error(err));
-}
+      .then(() => alert('Liga creada correctamente'))
+      .catch(err => console.error(err));
+  }
 
+  // En tu add-panel.ts
+  async onSave() {
+    // Usamos 'as Competitor' para evitar el error del ID missing/undefined
+    const result = await this.competitorService.addCompetitor(this.competitor as Competitor);
 
+    if (result) {
+      this.resetForm();
+      // No hace falta poner un Swal.fire aquí porque ya lo hace tu servicio
+    }
+  }
+
+  resetForm() {
+    this.competitor = {
+      firstName: '',
+      lastName: '',
+      gender: 'M',
+      compite: 'Kata',
+      club: '',
+      categoryIds: [],
+      categoryNames: []
+    };
+  }
+
+  async removeCompetitor(): Promise<void> { // Cambiamos a Promise<void> para evitar exigencias de retorno
+    if (!this.competitor.dorsal) {
+      await Swal.fire('Atención', 'Escribe el dorsal del competidor que quieres borrar', 'info');
+      return; // Añadimos return para salir de la función
+    }
+
+    const success = await this.competitorService.deleteCompetitorByDorsal(this.competitor.dorsal);
+
+    if (success) {
+      this.resetForm();
+    }
+  }
+
+  async removeCoach(): Promise<void> {
+    if (!this.coach.name) {
+      await Swal.fire('Atención', 'Escribe el nombre del entrenador', 'info');
+      return;
+    }
+
+    const success = await this.coachService.deleteCoachByName(this.coach.name);
+
+    if (success) {
+      // Limpiar el objeto coach local
+      this.coach = { name: '', club: '' };
+    }
+  }
 
 }

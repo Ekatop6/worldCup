@@ -48,7 +48,6 @@
   <input type="number" placeholder="Edad máxima" [(ngModel)]="category.maxAge" name="catMaxAge" />
   <input type="number" placeholder="Peso mínimo" [(ngModel)]="category.minWeight" name="catMinWeight" />
   <input type="number" placeholder="Peso máximo" [(ngModel)]="category.maxWeight" name="catMaxWeight" />
-  <input placeholder="Nivel cinturón" [(ngModel)]="category.beltLevel" name="catBeltLevel" />
   <button type="submit">Agregar Category</button>
 </form>
 
@@ -79,14 +78,25 @@
 </form>
 
 <hr>
+<h2>Borrar Competidor</h2>
+<form>
+  <div class="actions">
+    <input placeholder="Dorsal" [(ngModel)]="competitor.dorsal" name="dorsal" required />
+    <button type="button" (click)="removeCompetitor()" class="btn-delete"
+      style="background-color: #d33; color: white; margin-left: 10px;">
+      Borrar por Dorsal
+    </button>
+  </div>
+</form>
+<hr>
 <h2>Agregar Liguilla</h2>
 <form>
   <div class="menu">
-  <button routerLink="/categories">Ligas</button>
-  <button routerLink="/coaches">Entrenadores</button>
-  <button routerLink="/competitors">Competidores</button>
-  <button routerLink="/tatamis">Tatamis</button>
-  <button routerLink="/league">Liguillas</button>
+    <button routerLink="/categories">Ligas</button>
+    <button routerLink="/coaches">Entrenadores</button>
+    <button routerLink="/competitors">Competidores</button>
+    <button routerLink="/tatamis">Tatamis</button>
+    <button routerLink="/league">Liguillas</button>
 
-</div>
+  </div>
 </form>

@@ -9,7 +9,6 @@ export interface Category {
   maxAge?: number;
   minWeight?: number;
   maxWeight?: number;
-  beltLevel?: string;
   competitorIds?: string[];
   competitorNames?: string[];
   tatamiNumber?: Tatami;

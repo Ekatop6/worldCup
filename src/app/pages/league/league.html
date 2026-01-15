@@ -1,6 +1,6 @@
 <h2>Crear liga</h2>
 
-<select [(ngModel)]="selectedCategoryId">
+<select [(ngModel)]="selectedCategoryId" (change)="onCategoryChange()">
   <option value="">-- Selecciona categoría --</option>
   <option *ngFor="let c of categories$ | async" [value]="c.id">
     {{ c.name }}
@@ -9,15 +9,20 @@
 
 <h3>Selecciona competidores</h3>
 
-<div *ngFor="let c of competitors$ | async">
+<div *ngFor="let c of filteredCompetitors$ | async">
   <label>
     <input
       type="checkbox"
+      [checked]="selectedCompetitorIds.includes(c.id)"
       (change)="toggleCompetitor(c.id, $event.target.checked)"
     />
-    {{ c.firstName }} {{ c.lastName }}
+    {{ c.firstName }} {{ c.lastName }} (Dorsal: {{c.dorsal}})
   </label>
 </div>
+
+<p *ngIf="selectedCategoryId && (filteredCompetitors$ | async)?.length === 0" style="color: red;">
+  No hay competidores inscritos en esta categoría.
+</p>
 
 <p>Seleccionados: {{ selectedCompetitorIds.length }}</p>
 

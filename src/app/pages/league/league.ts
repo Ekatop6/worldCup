@@ -1,22 +1,19 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AsyncPipe } from '@angular/common';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { LeagueService } from '../../services/leagues/league.service';
 import { CategoryService } from '../../services/categories/category.service';
 import { CompetitorService } from '../../services/competitors/competitors.service';
 
-import { League } from '../../models/league.model';
 import { Category } from '../../models/category.model';
 import { Competitor } from '../../models/competitor.model';
-import { Match } from '../../models/match.model';
 
 @Component({
   selector: 'app-league',
   standalone: true,
-  imports: [CommonModule, FormsModule, AsyncPipe],
+  imports: [CommonModule, FormsModule],
   templateUrl: './league.html',
   styleUrls: ['./league.css']
 })
@@ -24,6 +21,7 @@ export class LeagueComponent {
 
   categories$: Observable<Category[]>;
   competitors$: Observable<Competitor[]>;
+  filteredCompetitors$: Observable<Competitor[]>;
 
   selectedCategoryId: string = '';
   selectedCompetitorIds: string[] = [];
@@ -35,7 +33,24 @@ export class LeagueComponent {
   ) {
     this.categories$ = this.categoryService.getCategories();
     this.competitors$ = this.competitorService.getCompetitors();
+    this.filteredCompetitors$ = this.competitors$;
   }
+
+  onCategoryChange() {
+  this.selectedCompetitorIds = []; 
+  
+  if (!this.selectedCategoryId) {
+    this.filteredCompetitors$ = this.competitors$;
+    return;
+  }
+
+  this.filteredCompetitors$ = this.competitors$.pipe(
+    map(competitors =>
+      // Usamos ?.includes para evitar errores si el campo no existe
+      competitors.filter(c => c.categoryIds?.includes(this.selectedCategoryId))
+    )
+  );
+}
 
   createLeague() {
     if (!this.selectedCategoryId) {
